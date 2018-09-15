@@ -6,6 +6,11 @@ from .color_print import BColors
 from main import DIRNAMES
 
 class Settings:
+    """
+    Core settings for Directory Cleaner. Houses the
+    default settings that will be reverted to if the user
+    uses the revert settings flag.
+    """
     ANSWERS = {
         "yes": ("yes", "y", "Yes", "Y", "YES"),
         "no": ("no", "n", "No", "N", "NO")
@@ -483,11 +488,14 @@ class Settings:
 
 
     def change_main_folder(self):
+        """
+        Change name of the main folder that everything is stored in.
+        """
         while True:
             response = input("\n" + BColors.OKBLUE + "What would you like to name the main folder?: " + BColors.ENDC)
-            if self.RESTRICTED_CHARS["unix"] in response and platform.system() in OS_CONVENTIONS["unix"]:
+            if self.RESTRICTED_CHARS["unix"] in response and platform.system() in self.OS_CONVENTIONS["unix"]:
                 print("\n" + BColors.FAIL + "There cannot be a '/' character in the folder name." + BColors.ENDC)
-            elif any(char in response for char in self.RESTRICTED_CHARS["windows"]) and platform.system() in OS_CONVENTIONS["windows"]:
+            elif any(char in response for char in self.RESTRICTED_CHARS["windows"]) and platform.system() in self.OS_CONVENTIONS["windows"]:
                 print("\n" + BColors.FAIL + "There cannot be any of the following characters in a Windows folder name:")
                 for char in self.RESTRICTED_CHARS:
                     print(char)
@@ -519,7 +527,7 @@ class Settings:
             filtered_response = response.split("=")[0].strip()
             if filtered_response not in self.extensions["extensions"]:
                 print("\n" + BColors.FAIL + "ERROR: That isn't a file extension that Directory Cleaner supports." + BColors.ENDC)
-                sys.exit()
+                return
             else:
                 value = response.split("=")[1].lstrip()
                 self.extensions["extensions"][filtered_response] = value
@@ -536,17 +544,17 @@ class Settings:
                     print("\n" + BColors.FAIL + "ERROR: Unrecognized answer. Please look at the options again." + BColors.ENDC)
 
 
-    def revert_settings(self):
+    def default_settings(self):
         """
         Reverts all user changed settings to the default values.
         Assign extensions dict to original values and write to extensions.json
         """
-        response = input("\n" + BColors.OKBLUE + "Are you sure you want to revert the settings to their original values? Type 'yes' or 'y' if so, else type 'no' or 'n'." + BColors.ENDC)
+        response = input("\n" + BColors.OKBLUE + "Are you sure you want to revert the settings to their original values? Type 'yes' or 'y' if so, else type 'no' or 'n': " + BColors.ENDC)
         response = response.strip()
         if response in self.ANSWERS["yes"]:
             self.extensions = self.DEFAULT_SETTINGS
             with open(DIRNAMES["data"], 'w') as f:
                 json.dump(self.DEFAULT_SETTINGS, f)
-            print("\n" + BColors.OKGREEN + "Settings reverted successfully." + Bcolors.ENDC)
+            print("\n" + BColors.OKGREEN + "Settings reverted successfully." + BColors.ENDC)
         elif response in self.ANSWERS["no"]:
             return

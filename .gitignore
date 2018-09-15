@@ -1,6 +1,8 @@
 *.pyc
+.DS_Store
 build/
 dist/
 __pycache__/
-testexts/
+testexts*/
+testext*/
 .pytest_cache/

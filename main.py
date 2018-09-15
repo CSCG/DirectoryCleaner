@@ -24,4 +24,9 @@ def main():
 
 if __name__ == "__main__":
     from directorycleaner import DirectoryCleaner
-    main()
+
+    #Don't print stack trace for control-c
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
