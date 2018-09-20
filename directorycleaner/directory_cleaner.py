@@ -3,6 +3,7 @@ import re
 import sys
 import json
 import datetime
+from .regex import *
 from tqdm import tqdm
 from .settings import Settings
 from .color_print import BColors
@@ -29,7 +30,6 @@ class DirectoryCleaner(Settings):
 
         args = self.register_args(parser)
         self.run(args)
-
         self.check_extensions()
 
 
@@ -74,18 +74,21 @@ class DirectoryCleaner(Settings):
             print("\n" + BColors.OKGREEN + "Files succesfully opened." + BColors.ENDC)
             for file in files:
                 if self.folder_cleanup:
-                    file_tuple = (file.name, file.path)
-                    self.files_info.append(file_tuple)
+                    if os.path.isdir(file):
+                        file_tuple = (file.name, file.path, "folder")
+                        self.files_info.append(file_tuple)
+                    else:
+                        file_tuple = (file.name, file.path, "file")
+                        self.files_info.append(file_tuple)
                 else:
                     if os.path.isdir(file):
                         pass
                     else:
-                        file_tuple = (file.name, file.path)
+                        file_tuple = (file.name, file.path, "file")
                         self.files_info.append(file_tuple)
         except FileNotFoundError:
                 print("\n" + BColors.FAIL + "ERROR: The directory you entered could not be found." + BColors.ENDC)
                 sys.exit(1)
-        print(self.files_info)
         self.double_check()
 
 
@@ -137,7 +140,7 @@ class DirectoryCleaner(Settings):
         Presents a double check to the user on if the directory entered is the correct one
         and if they would like to change it.
         """
-        print("\n\n" + BColors.OKBLUE + "Directory Cleaner is about to clean this directory. Are you sure " + self.directory + " is the directory you want cleaned? Here's a short preview of some of the files in this directory..." + BColors.ENDC)
+        print("\n\n" + BColors.OKBLUE + "Directory Cleaner is about to clean this directory. Are you sure " + BColors.ENDC + self.directory + BColors.OKBLUE + " is the directory you want cleaned? Here's a short preview of some of the files in this directory..." + BColors.ENDC)
         print("----------------------------------------")
         if len(self.files_info) < 20:
             for file in self.files_info:
@@ -148,7 +151,7 @@ class DirectoryCleaner(Settings):
         print("----------------------------------------")
 
         while True:
-            response = input("\n" + BColors.OKBLUE + "Enter 'yes' or 'y' if this is correct else enter 'no' or 'n' if it is not: " + BColors.ENDC)
+            response = input(BColors.OKBLUE + "Enter 'yes' or 'y' if this is correct else enter 'no' or 'n' if it is not: " + BColors.ENDC)
             response = response.strip()
             if response in Settings.ANSWERS["yes"]:
                 return
@@ -162,9 +165,11 @@ class DirectoryCleaner(Settings):
 
 
     def open_extensions(self):
-        """Load extensions into dict from JSON file. File is generated from
-        scraper.py. If you ever want to go back to the
-        default settings simply use the command --revertsettings."""
+        """
+        Load extensions into dict from JSON file. File is generated from
+        scraper.py. If you ever want to go back to the default settings simply
+        use the command --revertsettings or -rs.
+        """
         try:
             print("\n" + BColors.HEADER + "Opening settings." + BColors.ENDC)
             with open(DIRNAMES["data"], "r") as f:
@@ -201,13 +206,16 @@ class DirectoryCleaner(Settings):
         """
         for file in self.files_info:
                 try:
-                    if file[0].split(".")[1] in self.extensions["extensions"]:
-                        # print(file[0], "is a", self.extensions["extensions"][file[0].split(".")[1]])
+                    if file[2] == "folder":
                         results["success"].append(file)
                         results["total"] += 1
-                    else:
-                        results["error"].append(file)
-                        results["total"] += 1
+                    elif file[2] == "file":
+                        if file[0].split(".")[1] in self.extensions["extensions"]:
+                            results["success"].append(file)
+                            results["total"] += 1
+                        else:
+                            results["error"].append(file)
+                            results["total"] += 1
                 except:
                     results["error"].append(file)
         results["success_percent"] = len(results["success"]) / results["total"] * 100.00
@@ -216,37 +224,32 @@ class DirectoryCleaner(Settings):
         self.make_dirs(results)
 
 
-    def dir_regex(self):
-        """
-        Checks to see if folder already exists and will instead
-        add a (Number) to the front of the folder if it does.
-        """
-        pattern = re.compile(r".*\(\d+\)" + self.extensions["main_folder_name"] + ".*")
-        return pattern
-
-
     def make_dirs(self, results):
         """
         Will make all the required folders to store the files in the directory, will make
-        a 'Folders' folder depending on the corresponding folder_cleanup flag passed in. If a DirectoryCleaner folder
-        has already been made it will check and add a corresponding integer after the folder name.
-        Ex: If DirectoryCleaner(2018-8-23) exists it will instead make (1)DirectoryCleaner(2018-8-23) and so on
-        and so forth.
+        a 'Folders' folder depending on the corresponding folder_cleanup flag passed in.
+        If a DirectoryCleaner folder has already been made it will check and add a corresponding
+        integer after the folder name. Ex: If DirectoryCleaner(2018-8-23) exists it will instead
+        make (1)DirectoryCleaner(2018-8-23) and so on and so forth.
         """
         i = 1
-        dir_cleaner_folder = os.path.join(self.directory, self.extensions["main_folder_name"] + "(" + str(datetime.date.today()) + ")")
+        main_folder = self.extensions["main_folder_name"] + "(" + str(datetime.date.today()) + ")"
+        dir_cleaner_folder = os.path.join(self.directory, main_folder)
         final_paths = []
 
         try:
             os.makedirs(dir_cleaner_folder)
         except FileExistsError:
-            while os.path.exists(dir_cleaner_folder):
-                dir_cleaner_folder = f"({str(i)})" + dir_cleaner_folder
-                i += 1
+            main_folder = check_duplicate(main_folder, self.directory)
+            print(main_folder)
+            dir_cleaner_folder = os.path.join(self.directory, main_folder)
             os.makedirs(dir_cleaner_folder)
 
         for file in tqdm(results["success"], total=len(results["success"])):
-            new_dir = os.path.join(dir_cleaner_folder, self.extensions["extensions"][file[0].split(".")[1]]) #new_dir = directorycleaner(2018 blah blah)/(png)Portable Network Graphics
+            if file[2] == "folder":
+                new_dir = os.path.join(dir_cleaner_folder, "Folders")
+            elif file[2] == "file":
+                new_dir = os.path.join(dir_cleaner_folder, self.extensions["extensions"][file[0].split(".")[1]]) #new_dir = directorycleaner(2018 blah blah)/(png)Portable Network Graphics
             #dir_cleaner_folder = directorycleaner(2018 blah blah)
             try:
                 old_location = os.path.join(self.directory, file[0])
@@ -256,13 +259,32 @@ class DirectoryCleaner(Settings):
                 os.rename(old_location, new_location)
                 final_paths.append(locations)
             except FileExistsError:
-                print("\nThe directory", os.path.join(self.directory, self.extensions["extensions"][file[0].split(".")[1]]), "already exists.")
+                locations = (old_location, new_location)
+                final_paths.append(locations)
+                os.rename(old_location, new_location)
 
-        print("\n" + BColors.OKGREEN + "Finished cleaning directory. Let's see where those things went: " + BColors.ENDC)
-        print("-------------------------------------")
-        for elem in final_paths:
-            print(f"\nOriginal Location: {elem[0]}\nNew Location: {elem[1]}")
-        print("-------------------------------------")
+        new_dir = os.path.join(dir_cleaner_folder, self.extensions["unknowns_folder_name"])
+        for file in results["error"]:
+            try:
+                old_location = os.path.join(self.directory, file[0])
+                new_location = os.path.join(new_dir, file[0])
+                locations = (old_location, new_location)
+                os.makedirs(new_dir)
+                os.rename(old_location, new_location)
+                final_paths.append(locations)
+            except FileExistsError:
+                locations = (old_location, new_location)
+                final_paths.append(locations)
+                os.rename(old_location, new_location)
+
+        txt = self.extensions["txt_file_name"] + "(" + str(datetime.date.today()) + ").txt"
+        txt = check_duplicate(txt, self.directory)
+
+        with open(os.path.join(self.directory, txt), "w") as f:
+            for elem in final_paths:
+                f.write(f"\nOriginal Location: {elem[0]}\nNew Location: {elem[1]}\n")
+
+        print("\n" + BColors.OKGREEN + f"Finished cleaning directory. A text file named {txt} has been generated in the directory showing where all your files ended up." + BColors.ENDC)
 
 
     def final_output(self, results):

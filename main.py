@@ -12,13 +12,11 @@ DIRNAMES= {
 }
 
 def main():
-    #Just a fun welcome message when running the program.
     f = Figlet()
     welcome_message = f.renderText('Directory Cleaner')
     welcome_message = BColors.OKGREEN + welcome_message + BColors.ENDC
-    print(welcome_message)
+    print(welcome_message + "\nIf at any time you wish to exit the program simply type control + c")
 
-    #Pass parser object to DirectoryCleaner. Feels cleaner to declare the arguments in the class itself.
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     directory_cleaner = DirectoryCleaner(parser=parser)
 
