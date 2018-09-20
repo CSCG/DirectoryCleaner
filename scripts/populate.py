@@ -1,4 +1,5 @@
 #Short script to populate a directory with a bunch of empty files to simulate a messy directory.
+#Could be modified to actually fill the files with random data to be more realistic.
 import sys
 import os
 

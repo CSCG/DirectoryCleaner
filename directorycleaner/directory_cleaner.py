@@ -53,6 +53,7 @@ class DirectoryCleaner(Settings):
         parser.add_argument('--revert_settings', '-rs', action='store_const', const=True, help='Revert the settings file to its default state when the program was downloaded. Will use the default settings to run the program as well.')
         parser.add_argument('--group_files', '-gf', action='store_const', const=True, help='Set this flag if you would like to group commonly used files like Word Docs, Excel files, PDFs, music files etc. in folders named after the type of media they are.')
         parser.add_argument('--change_folder_names', '-cfn', action='store_const', const=True, help='Set this flag if you want to rename one of the default folder names Directory Cleaner uses for that type of file.')
+        parser.add_argument('--change_group_name', '-cgn', action='store_const', const=True, help="Set this flag if you'd like to rename one of the default group names.")
         args = parser.parse_args()
         return args
 

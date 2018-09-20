@@ -12,19 +12,18 @@ DIRNAMES= {
 }
 
 def main():
-    f = Figlet()
-    welcome_message = f.renderText('Directory Cleaner')
-    welcome_message = BColors.OKGREEN + welcome_message + BColors.ENDC
-    print(welcome_message + "\nIf at any time you wish to exit the program simply type control + c")
-
-    parser = argparse.ArgumentParser(description=DESCRIPTION)
-    directory_cleaner = DirectoryCleaner(parser=parser)
-
-if __name__ == "__main__":
-    from directorycleaner import DirectoryCleaner
-
-    #Don't print stack trace for control-c
     try:
-        main()
+        f = Figlet()
+        welcome_message = f.renderText('Directory Cleaner')
+        welcome_message = BColors.OKGREEN + welcome_message + BColors.ENDC
+        print(welcome_message + "\nIf at any time you wish to exit the program simply type control + c")
+
+        parser = argparse.ArgumentParser(description=DESCRIPTION)
+        from directorycleaner import DirectoryCleaner
+
+        directory_cleaner = DirectoryCleaner(parser=parser)
     except KeyboardInterrupt:
         pass
+
+if __name__ == "__main__":
+    main()
