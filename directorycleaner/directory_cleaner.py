@@ -27,6 +27,7 @@ class DirectoryCleaner(Settings):
         self.change_folder_names = False
         self.group_files = False
         self.revert_settings = False
+        self.change_group_names = False
 
         args = self.register_args(parser)
         self.run(args)
@@ -53,7 +54,7 @@ class DirectoryCleaner(Settings):
         parser.add_argument('--revert_settings', '-rs', action='store_const', const=True, help='Revert the settings file to its default state when the program was downloaded. Will use the default settings to run the program as well.')
         parser.add_argument('--group_files', '-gf', action='store_const', const=True, help='Set this flag if you would like to group commonly used files like Word Docs, Excel files, PDFs, music files etc. in folders named after the type of media they are.')
         parser.add_argument('--change_folder_names', '-cfn', action='store_const', const=True, help='Set this flag if you want to rename one of the default folder names Directory Cleaner uses for that type of file.')
-        parser.add_argument('--change_group_name', '-cgn', action='store_const', const=True, help="Set this flag if you'd like to rename one of the default group names.")
+        parser.add_argument('--change_group_names', '-cgn', action='store_const', const=True, help="Set this flag if you'd like to rename one of the default group names.")
         args = parser.parse_args()
         return args
 
@@ -108,6 +109,9 @@ class DirectoryCleaner(Settings):
         if self.main_folder_name:
             self.change_main_folder()
 
+        if self.change_group_names:
+            self.change_group_name()
+
 
     def set_vars(self, args):
         """
@@ -135,6 +139,11 @@ class DirectoryCleaner(Settings):
         elif args.revert_settings == None:
             self.revert_settings = False
 
+        if args.change_group_names:
+            self.change_group_names = True
+        elif args.change_group_names == None:
+            self.change_group_names = False
+
 
     def double_check(self):
         """
@@ -152,12 +161,14 @@ class DirectoryCleaner(Settings):
         print("----------------------------------------")
 
         while True:
-            response = input(BColors.OKBLUE + "Enter 'yes' or 'y' if this is correct else enter 'no' or 'n' if it is not: " + BColors.ENDC)
+            print(BColors.OKBLUE + "Enter 'yes' or 'y' if this is correct else enter 'no' or 'n' if it is not: " + BColors.ENDC, end="")
+            response = input()
             response = response.strip()
             if response in Settings.ANSWERS["yes"]:
                 return
             elif response in Settings.ANSWERS["no"]:
-                new_dir = input("\n" + BColors.OKBLUE + "Please enter the new path of the directory you would like to be cleaned: " + BColors.ENDC)
+                print("\n" + BColors.OKBLUE + "Please enter the new path of the directory you would like to be cleaned: " + BColors.ENDC, end="")
+                new_dir = input()
                 self.directory = new_dir.strip()
                 self.open_dir()
                 return
@@ -197,14 +208,6 @@ class DirectoryCleaner(Settings):
                     "error_percent": 0
                  }
 
-        """
-        Fairly straightforward. folder_cleanup variable determines whether folders get cleaned up as well.
-        They will be moved to a 'Folders' folder. If the program is used more than once in a day and a
-        DirectoryCleaner folder already exists in the directory it will be ignored so a clear hierarchy can
-        be seen. So if the program was run and DirectoryCleaner(date) exists and in the same day the
-        program is ran again, (1)DirectoryCleaner(date) will be made but DirectoryCleaner(date) will still
-        be in the same directory and not be moved to the new folder.
-        """
         for file in self.files_info:
                 try:
                     if file[2] == "folder":
@@ -219,6 +222,7 @@ class DirectoryCleaner(Settings):
                             results["total"] += 1
                 except:
                     results["error"].append(file)
+
         results["success_percent"] = len(results["success"]) / results["total"] * 100.00
         results["error_percent"] = len(results["error"]) / results["total"] * 100.00
         self.final_output(results)

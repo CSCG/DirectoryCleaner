@@ -28,15 +28,38 @@ class Settings:
 
     DEFAULT_SETTINGS = {
     "main_folder_name": "DirectoryCleaner",
-  "groups": {
-    "Images": ["jpg", "jpeg", "png", "tif", "tiff", "gif", "bmp", "eps", "raw", "cr2", "nef", "orf", "sr2"],
-    "Audio": ["pcm", "wav", "mp3", "aiff", "aac", "ogg", "wma", "flac", "alac", "opus"],
-    "Video": ["mov", "mp4", "avi", "flv", "wmv", "webm", "m4a", "m4v"],
-    "Documents": ["doc", "docx", "docm"],
-    "PDFS": ["pdf"],
-    "SpreadSheets": ["xls", "xlsx", "xlsm", "xltx", "xltm", "xlsx", "xlt", "xlm"],
-    "TextFiles": ["txt", "rtf"]
-  },
+    "unknowns_folder_name": "Unknown",
+    "txt_file_name": "DirectoryCleaner",
+      "groups": {
+        "Images": {
+            "group_items": ["jpg", "jpeg", "png", "tif", "tiff", "gif", "bmp", "eps", "raw", "cr2", "nef", "orf", "sr2"],
+            "name": "Images"
+        },
+        "Audio": {
+            "group_items": ["pcm", "wav", "mp3", "aiff", "aac", "ogg", "wma", "flac", "alac", "opus"],
+            "name": "Audio"
+        },
+        "Video": {
+            "group_items": ["mov", "mp4", "avi", "flv", "wmv", "webm", "m4a", "m4v"],
+            "name": "Video"
+        },
+        "Documents": {
+            "group_items": ["doc", "docx", "docm"],
+            "name": "Documents"
+        },
+        "PDFS": {
+            "group_items": ["pdf"],
+            "name": "PDFS"
+        },
+        "SpreadSheets": {
+            "group_items": ["xls", "xlsx", "xlsm", "xltx", "xltm", "xlsx", "xlt", "xlm"],
+            "name": "SpreadSheets"
+        },
+        "TextFiles": {
+            "group_items": ["txt", "rtf"],
+            "name": "TextFiles"
+        }
+    },
   "extensions":{
   	"7z": "(7z)7z compressed archive file",
   	"ace": "(ace)WinAce Compressed File",
@@ -486,13 +509,45 @@ class Settings:
   }
 }
 
+    def grouping(self, results):
+        pass
+
+
+    def change_group_name(self):
+        while True:
+            print("\n" + BColors.HEADER + "Here is a list of the current group names. If you would like to change any of them simply type the name of the type of group you want to change followed by an = sign and the name you would like to use. If you don't want to change a group name, type exit." + BColors.ENDC)
+            print("--------------------")
+            for group in self.extensions["groups"]:
+                print(group + " = " + self.extensions["groups"][group]["name"])
+            print("--------------------")
+            print(BColors.OKBLUE + "What group name would you like to change?: " + BColors.ENDC, end="")
+            response = input()
+            if "=" in response:
+                break
+            elif response.strip() == "exit":
+                return
+            else:
+                print("\n" + BColors.FAIL + "ERROR: There was no '=' detected in your response. Please read the formatting again." + BColors.ENDC)
+
+        value = response.split("=")[0:2]
+        for i in range(len(value)):
+            value[i] = value[i].strip()
+        try:
+            self.extensions["groups"][value[0]]["name"] = value[1]
+        except:
+            print("\nERROR: That isn't a group name.")
+            return
+        with open(DIRNAMES["data"], "w") as f:
+             json.dump(self.extensions, f)
+
 
     def change_main_folder(self):
         """
         Change name of the main folder that everything is stored in.
         """
         while True:
-            response = input("\n" + BColors.OKBLUE + "What would you like to name the main folder?: " + BColors.ENDC)
+            print("\n" + BColors.OKBLUE + "What would you like to name the main folder?: " + BColors.ENDC, end="")
+            response = input()
             if self.RESTRICTED_CHARS["unix"] in response and platform.system() in self.OS_CONVENTIONS["unix"]:
                 print("\n" + BColors.FAIL + "There cannot be a '/' character in the folder name." + BColors.ENDC)
             elif any(char in response for char in self.RESTRICTED_CHARS["windows"]) and platform.system() in self.OS_CONVENTIONS["windows"]:
@@ -518,7 +573,8 @@ class Settings:
                 print(k, "=", self.extensions["extensions"][k])
 
             while True:
-                response = input("\n" + BColors.OKBLUE + "If you want to change the name of one of the folders simply type the extension of the file, for example png, pdf, docx, followed by an equal sign and whatever you want to replace it with.\nWhenever you're ready 😊: " + BColors.ENDC)
+                print("\n" + BColors.OKBLUE + "If you want to change the name of one of the folders simply type the extension of the file, for example png, pdf, docx, followed by an equal sign and whatever you want to replace it with.\nWhenever you're ready 😊: " + BColors.ENDC, end="")
+                response = input()
                 if "=" in response:
                     break
                 else:
@@ -534,7 +590,8 @@ class Settings:
                 print(self.extensions["extensions"][filtered_response])
 
             while True:
-                exit = input("\n" + BColors.OKBLUE + "Do you want to change another folder name? Type 'yes' or 'y' if so, else type 'no' or 'n': " + BColors.ENDC)
+                print("\n" + BColors.OKBLUE + "Do you want to change another folder name? Type 'yes' or 'y' if so, else type 'no' or 'n': " + BColors.ENDC, end="")
+                exit = input()
                 exit = exit.strip()
                 if exit in self.ANSWERS["no"]:
                     return
@@ -549,7 +606,8 @@ class Settings:
         Reverts all user changed settings to the default values.
         Assign extensions dict to original values and write to extensions.json
         """
-        response = input("\n" + BColors.OKBLUE + "Are you sure you want to revert the settings to their original values? Type 'yes' or 'y' if so, else type 'no' or 'n': " + BColors.ENDC)
+        print("\n" + BColors.OKBLUE + "Are you sure you want to revert the settings to their original values? Type 'yes' or 'y' if so, else type 'no' or 'n': " + BColors.ENDC, end="")
+        response = input()
         response = response.strip()
         if response in self.ANSWERS["yes"]:
             self.extensions = self.DEFAULT_SETTINGS

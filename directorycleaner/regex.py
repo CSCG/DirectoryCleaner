@@ -22,11 +22,8 @@ def check_duplicate(txt, directory):
     """
     while True:
         if os.path.exists(os.path.join(directory, txt)):
-            print('path exists')
             match = dir_regex(txt)
-            print(match)
             if match is not None:
-                 print('regex worked')
                  num = int(txt[1])
                  num += 1
                  num = str(num)
