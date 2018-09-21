@@ -29,8 +29,8 @@ class DirectoryCleaner(Settings):
         self.revert_settings = False
         self.change_group_names = False
 
-        args = self.register_args(parser)
-        self.run(args)
+        self.args = self.register_args(parser)
+        self.run(self.args)
         self.check_extensions()
 
 
@@ -112,6 +112,9 @@ class DirectoryCleaner(Settings):
         if self.change_group_names:
             self.change_group_name()
 
+        # if self.group_files:
+        #     self.grouping()
+
 
     def set_vars(self, args):
         """
@@ -144,6 +147,11 @@ class DirectoryCleaner(Settings):
         elif args.change_group_names == None:
             self.change_group_names = False
 
+        if args.group_files:
+            self.group_files = True
+        elif args.group_files == None:
+            self.group_files = False
+
 
     def double_check(self):
         """
@@ -174,6 +182,10 @@ class DirectoryCleaner(Settings):
                 return
             else:
                 print("\n" + BColors.FAIL + "ERROR: The input received was not a valid option. Please read the options again." + BColors.ENDC)
+
+
+    # def grouping(self, file):
+
 
 
     def open_extensions(self):
@@ -233,14 +245,12 @@ class DirectoryCleaner(Settings):
         """
         Will make all the required folders to store the files in the directory, will make
         a 'Folders' folder depending on the corresponding folder_cleanup flag passed in.
-        If a DirectoryCleaner folder has already been made it will check and add a corresponding
-        integer after the folder name. Ex: If DirectoryCleaner(2018-8-23) exists it will instead
-        make (1)DirectoryCleaner(2018-8-23) and so on and so forth.
         """
         i = 1
+        final_paths = []
+        new_dir = ""
         main_folder = self.extensions["main_folder_name"] + "(" + str(datetime.date.today()) + ")"
         dir_cleaner_folder = os.path.join(self.directory, main_folder)
-        final_paths = []
 
         try:
             os.makedirs(dir_cleaner_folder)
@@ -251,11 +261,19 @@ class DirectoryCleaner(Settings):
             os.makedirs(dir_cleaner_folder)
 
         for file in tqdm(results["success"], total=len(results["success"])):
+            extension = file[0].split(".")[1]
             if file[2] == "folder":
                 new_dir = os.path.join(dir_cleaner_folder, "Folders")
-            elif file[2] == "file":
-                new_dir = os.path.join(dir_cleaner_folder, self.extensions["extensions"][file[0].split(".")[1]]) #new_dir = directorycleaner(2018 blah blah)/(png)Portable Network Graphics
-            #dir_cleaner_folder = directorycleaner(2018 blah blah)
+            elif file[2] == "file" and self.group_files:
+                if self.group_files:
+                    for group in self.extensions["groups"]:
+                        if extension in self.extensions["groups"][group]["group_items"]:
+                            new_dir = os.path.join(dir_cleaner_folder, self.extensions["groups"][group]["name"])
+                            break
+                        else:
+                            new_dir = os.path.join(dir_cleaner_folder, self.extensions["extensions"][extension]) #new_dir = directorycleaner(2018 blah blah)/(png)Portable Network Graphics
+                else:
+                    new_dir = os.path.join(dir_cleaner_folder, self.extensions["extensions"][extension])
             try:
                 old_location = os.path.join(self.directory, file[0])
                 new_location = os.path.join(new_dir, file[0])
@@ -288,7 +306,6 @@ class DirectoryCleaner(Settings):
         with open(os.path.join(self.directory, txt), "w") as f:
             for elem in final_paths:
                 f.write(f"\nOriginal Location: {elem[0]}\nNew Location: {elem[1]}\n")
-
         print("\n" + BColors.OKGREEN + f"Finished cleaning directory. A text file named {txt} has been generated in the directory showing where all your files ended up." + BColors.ENDC)
 
 

@@ -3,9 +3,7 @@ import re
 
 def dir_regex(name):
     """
-    Checks to see if a duplicate folder already exists and will instead
-    add +1 to whatever number is currently assigned to the duplicate
-    folder.
+    Regex to check if there is a duplicate folder already.
     """
     pattern = re.compile(r"^\(\d+\).+")
     match = pattern.search(name)
@@ -24,10 +22,12 @@ def check_duplicate(txt, directory):
         if os.path.exists(os.path.join(directory, txt)):
             match = dir_regex(txt)
             if match is not None:
-                 num = int(txt[1])
+                 positions = (txt.find("("), txt.find(")"))
+                 num = txt[positions[0] + 1 : positions[1]]
+                 num = int(num)
                  num += 1
                  num = str(num)
-                 txt = "(" + num + ")" + txt[3:]
+                 txt = "(" + num + ")" + txt[positions[1] + 1:]
             else:
                 txt = "(1)" + txt
         else:

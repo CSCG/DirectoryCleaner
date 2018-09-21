@@ -509,9 +509,6 @@ class Settings:
   }
 }
 
-    def grouping(self, results):
-        pass
-
 
     def change_group_name(self):
         while True:
