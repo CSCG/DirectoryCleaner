@@ -2,8 +2,8 @@ import sys
 import os
 import json
 import platform
-from color_print import BColors
-from main import DIRNAMES
+from .color_print import BColors
+from .main import DIRNAMES
 
 class Settings:
     """

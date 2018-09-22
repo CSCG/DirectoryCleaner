@@ -3,11 +3,11 @@ import re
 import sys
 import json
 import datetime
-from regex import *
+from .settings import Settings
+from .regex import dir_regex, check_duplicate
 from tqdm import tqdm
-from settings import Settings
-from color_print import BColors
-from main import DIRNAMES
+from .color_print import BColors
+from .main import DIRNAMES
 
 class DirectoryCleaner(Settings):
     """
@@ -220,7 +220,9 @@ class DirectoryCleaner(Settings):
                         results["success"].append(file)
                         results["total"] += 1
                     elif file[2] == "file":
-                        if file[0].split(".")[1] in self.extensions["extensions"]:
+                        pos = file[0].rfind(".")
+                        extension = file[0][pos + 1:]
+                        if extension in self.extensions["extensions"]:
                             results["success"].append(file)
                             results["total"] += 1
                         else:
@@ -255,7 +257,8 @@ class DirectoryCleaner(Settings):
             os.makedirs(dir_cleaner_folder)
 
         for file in tqdm(results["success"], total=len(results["success"])):
-            extension = file[0].split(".")[1]
+            pos = file[0].rfind(".")
+            extension = file[0][pos + 1:]
             if file[2] == "folder":
                 new_dir = os.path.join(dir_cleaner_folder, "Folders")
             elif file[2] == "file":

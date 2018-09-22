@@ -1,7 +1,7 @@
 import argparse
 import os
 from pyfiglet import Figlet
-from color_print import BColors
+from .color_print import BColors
 
 DESCRIPTION = """Will put all known file types in sub folders inside a parent
 folder named whatever you specify(it is DirectoryCleaner(<current-date>) by default)."""
@@ -19,7 +19,7 @@ def main():
         print(welcome_message + "\nIf at any time you wish to exit the program simply type control + c")
 
         parser = argparse.ArgumentParser(description=DESCRIPTION)
-        from directory_cleaner import DirectoryCleaner
+        from .directory_cleaner import DirectoryCleaner
 
         directory_cleaner = DirectoryCleaner(parser=parser)
         directory_cleaner.run(directory_cleaner.args)
