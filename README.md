@@ -2,7 +2,7 @@
 
 #### For when you're tired of all that garbage
 
-![demo](https://s3.amazonaws.com/gfyshare/directorycleaner.gif)
+![demo](https://s3.amazonaws.com/gfyshare/directorycleanergif.gif)
 
 
 ---
