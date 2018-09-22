@@ -9,6 +9,7 @@ setup(
     version = "0.1",
     description = "An easy to use program that will clean a specified directory by placing all loose files in one folder with specified sub folders.",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author = "Danny Canter",
     author_email="dannycanter123@gmail.com",
     packages = find_packages(),
