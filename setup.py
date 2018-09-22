@@ -1,10 +1,16 @@
 from setuptools import setup, find_packages
 
+long_description=""
+with open("README.md", "r") as f:
+    long_description = f.read()
+
 setup(
     name = "DirectoryCleaner",
     version = "0.1",
     description = "An easy to use program that will clean a specified directory by placing all loose files in one folder with specified sub folders.",
+    long_description=long_description,
     author = "Danny Canter",
+    author_email="dannycanter123@gmail.com",
     packages = find_packages(),
     # include_package_data = True,
     license = "MIT",
