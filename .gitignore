@@ -6,3 +6,5 @@ __pycache__/
 testexts*/
 testext*/
 .pytest_cache/
+*.egg-info
+setup.py

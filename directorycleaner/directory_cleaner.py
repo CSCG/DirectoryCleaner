@@ -28,10 +28,7 @@ class DirectoryCleaner(Settings):
         self.group_files = False
         self.revert_settings = False
         self.change_group_names = False
-
         self.args = self.register_args(parser)
-        self.run(self.args)
-        self.check_extensions()
 
 
     def run(self, args):
@@ -111,9 +108,6 @@ class DirectoryCleaner(Settings):
 
         if self.change_group_names:
             self.change_group_name()
-
-        # if self.group_files:
-        #     self.grouping()
 
 
     def set_vars(self, args):
@@ -264,7 +258,7 @@ class DirectoryCleaner(Settings):
             extension = file[0].split(".")[1]
             if file[2] == "folder":
                 new_dir = os.path.join(dir_cleaner_folder, "Folders")
-            elif file[2] == "file" and self.group_files:
+            elif file[2] == "file":
                 if self.group_files:
                     for group in self.extensions["groups"]:
                         if extension in self.extensions["groups"][group]["group_items"]:

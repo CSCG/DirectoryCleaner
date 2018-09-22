@@ -14,7 +14,7 @@ setup(
     ],
     extras_require = {
         "Scraper": ["beautifulsoup4 >= 4.6.3", "requests >= 2.19.1"],
-    }
+    },
     entry_points = {
         'console_scripts': [
             'DirectoryCleaner = main:main',

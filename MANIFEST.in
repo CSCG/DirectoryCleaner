@@ -1,1 +1,3 @@
 include data/extensions.json
+include *.py
+include scripts/*.py

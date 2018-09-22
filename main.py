@@ -22,6 +22,8 @@ def main():
         from directorycleaner import DirectoryCleaner
 
         directory_cleaner = DirectoryCleaner(parser=parser)
+        directory_cleaner.run(directory_cleaner.args)
+        directory_cleaner.check_extensions()
     except KeyboardInterrupt:
         pass
 

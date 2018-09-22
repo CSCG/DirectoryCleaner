@@ -41,8 +41,16 @@ optional arguments:
                         Revert the settings file to its default state when the
                         program was downloaded. Will use the default settings
                         to run the program as well.
+  --group_files, -gf    Set this flag if you would like to group commonly used
+                        files like Word Docs, Excel files, PDFs, music files
+                        etc. in folders named after the type of media they
+                        are.
   --change_folder_names, -cfn
                         Set this flag if you want to rename one of the default
                         folder names Directory Cleaner uses for that type of
                         file.
+  --change_group_names, -cgn
+                        Set this flag if you'd like to rename one of the
+                        default group names.
+
 ```                        
