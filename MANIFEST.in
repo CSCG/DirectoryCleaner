@@ -1,3 +1,5 @@
-include data/extensions.json
-include *.py
-include scripts/*.py
+include directorycleaner/data/extensions.json
+include directorycleaner/tests/*.py
+include directorycleaner/scripts/*.py
+include README.md
+include LICENSE.txt

@@ -3,10 +3,10 @@ import re
 import sys
 import json
 import datetime
-from .regex import *
+from regex import *
 from tqdm import tqdm
-from .settings import Settings
-from .color_print import BColors
+from settings import Settings
+from color_print import BColors
 from main import DIRNAMES
 
 class DirectoryCleaner(Settings):
