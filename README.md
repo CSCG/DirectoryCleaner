@@ -5,9 +5,8 @@
 </div>
 #### For when you're tired of all that garbage
 
-<video alt="" className="tutorials" controls>
-        <source src="https://giant.gfycat.com/ShamelessTotalLeopardseal.webm" type="video/webm" />
-</video>
+![demo](https://s3.amazonaws.com/gfyshare/directorycleaner.png)
+
 
 ---
 <div style="text-align: center">
