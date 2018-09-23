@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta author="Danny Canter">
+    <link rel='stylesheet' href='./main.css'>
+    <title>Directory Cleaner, When You Want It Clean</title>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.9"></script>
+  </head>
+
+  <body>
+    <div class="centered">
+      <a href="http://www.github.com/cantasaurus/directorycleaner"><img src="/images/github.png"/></a>
+      <a href="https://pypi.org/project/DirectoryCleaner/"><img src="/images/pypi_logo.png" height="120" width="120"/></a>
+      <br>
+      <div class="well">
+        <p class="install"><code>pip install DirectoryCleaner</code></p>
+        <br>
+        <p>A commandline program that makes it easier than ever to clean a messy directory.</p>
+      </div>
+    </div>
+
+
+  <div class="terminal space shadow">
+    <div class="top">
+        <div class="btns" id="btns">
+            <span class="circle red"></span>
+            <span class="circle yellow"></span>
+            <span class="circle green"></span>
+        </div>
+      <div class="title" id="unixTitle"></div>
+    </div>
+    <div class="body">
+      <pre class="inputs" id='first_input'>
+        ____  _               _
+       |  _ \(_)_ __ ___  ___| |_ ___  _ __ _   _
+       | | | | | '__/ _ \/ __| __/ _ \| '__| | | |
+       | |_| | | | |  __/ (__| || (_) | |  | |_| |
+       |____/|_|_|  \___|\___|\__\___/|_|   \__, |
+                                            |___/
+         ____ _
+        / ___| | ___  __ _ _ __   ___ _ __
+       | |   | |/ _ \/ _` | '_ \ / _ \ '__|
+       | |___| |  __/ (_| | | | |  __/ |
+        \____|_|\___|\__,_|_| |_|\___|_|
+
+
+        Unix Example
+      </pre>
+      <p id='firstElem'>
+      <br>
+    </div>
+  </div>
+
+  <div class="terminal space shadow">
+    <div class="top">
+        <div class="btns" id="btns">
+            <span class="circle red"></span>
+            <span class="circle yellow"></span>
+            <span class="circle green"></span>
+        </div>
+      <div class="title" id="windowsTitle"></div>
+      <script>
+          function setTitle(id){
+            var title = document.getElementById(id),
+            heightWidth = getHeightWidth();
+            if(id === 'windowsTitle'){
+              title.innerHTML = "Command Prompt"
+              return
+            }
+            title.innerHTML = `directorycleaner -- -bash -- ${heightWidth[0]}x${heightWidth[1]}`;
+          }
+
+          function getHeightWidth(){
+            var heightWidth = [window.innerWidth, window.innerHeight];
+            return heightWidth;
+          }
+
+          setTitle('unixTitle');
+          setTitle('windowsTitle');
+          window.addEventListener('resize', function(){
+            setTitle('unixTitle');
+            setTitle('windowsTitle');
+          });
+      </script>
+    </div>
+    <div class="body">
+      <pre class="inputs">
+        ____  _               _
+       |  _ \(_)_ __ ___  ___| |_ ___  _ __ _   _
+       | | | | | '__/ _ \/ __| __/ _ \| '__| | | |
+       | |_| | | | |  __/ (__| || (_) | |  | |_| |
+       |____/|_|_|  \___|\___|\__\___/|_|   \__, |
+                                            |___/
+         ____ _
+        / ___| | ___  __ _ _ __   ___ _ __
+       | |   | |/ _ \/ _` | '_ \ / _ \ '__|
+       | |___| |  __/ (_| | | | |  __/ |
+        \____|_|\___|\__,_|_| |_|\___|_|
+
+
+        Windows Example
+      </pre>
+      <p id='secondElem'>
+      <br>
+    </div>
+   </div>
+   <div class="centered">
+     <p><b>Made by:</b> <a href="https://cantasaurus.github.io">Danny Canter</a></p>
+     <p><b>Contact:</b> <a href="mailto:dannycanter123@gmail.com">dannycanter123@gmail.com</a></p>
+  </div>
+  <br>
+  <script type='text/javascript' src='main.js'></script>
+ </body>
+</html>
