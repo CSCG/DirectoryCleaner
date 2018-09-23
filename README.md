@@ -24,6 +24,13 @@ DirectoryCleaner -h
 ```
 If you get the help commands you're all set.
 
+### Windows Specific Extra Step
+
+If you don't already, set your default encoding for cmd to UTF-8 using this command.
+```
+chcp 65001
+``` 
+
 ## Example Usage
 
 The most basic form of usage is to clean a messy directory with all the default names. The default names take the form of (file_extension)Full_name_of_file_extension. For example a png files default name is (png)Portable Network Graphics. The default directory name everything will be placed in is named DirectoryCleaner(Current_date).

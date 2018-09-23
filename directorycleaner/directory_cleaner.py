@@ -303,6 +303,7 @@ class DirectoryCleaner(Settings):
         with open(os.path.join(self.directory, txt), "w") as f:
             for elem in final_paths:
                 f.write(f"\nOriginal Location: {elem[0]}\nNew Location: {elem[1]}\n")
+
         print("\n" + BColors.OKGREEN + f"Finished cleaning directory. A text file named {txt} has been generated in the directory showing where all your files ended up." + BColors.ENDC)
 
 

@@ -473,6 +473,7 @@ class Settings:
   	"pds": "(pds)PowerDirector Script File",
   	"qt": "(qt)Apple QuickTime Movie",
   	"rm": "(rm)Real Media File",
+    "url":"(url)Internet Shortcut",
   	"srt": "(srt)SubRip Text Subtitle file",
   	"swf": "(swf)Shockwave Flash Movie",
   	"ts": "(ts)Video Transport Stream File",
