@@ -6,14 +6,13 @@ with open("README.md", "r") as f:
 
 setup(
     name = "DirectoryCleaner",
-    version = "0.1",
+    version = "0.2",
     description = "An easy to use program that will clean a specified directory by placing all loose files in one folder with specified sub folders.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author = "Danny Canter",
     author_email="dannycanter123@gmail.com",
     packages = find_packages(),
-    # include_package_data = True,
     license = "MIT",
     url="https://github.com/Cantasaurus/DirectoryCleaner",
     install_requires = [
